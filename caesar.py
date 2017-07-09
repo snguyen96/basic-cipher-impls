@@ -1,9 +1,24 @@
 message = input('Enter your message: ')
-# shift = input('shift: ')
+direction = input('direction: ')
+shift = int(input('shift: '))
 
-arr1 =     ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-encoding = ['x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w']
+if direction == 'r':
+    shift *= -1
+elif direction == 'l':
+    pass
+else:
+    print("error - enter 'l' or 'r' for 'left/right'")
+    
+arr1 = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+encoding = []
 
+for i in range(shift, len(arr1)):
+    encoding.append(arr1[i])
+
+for j in range(shift):
+    encoding.append(arr1[j])
+    
+message = message.lower()
 message = list(message)
 
 for i in range(len(message)):
