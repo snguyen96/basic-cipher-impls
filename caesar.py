@@ -1,6 +1,6 @@
-message = input('Enter your message: ')
-direction = input('direction: ')
-shift = int(input('shift: '))
+message = input("Enter your message: ")
+direction = input("direction ('l' or 'r'): ")
+shift = int(input("shift (integer): "))
 
 if direction == 'r':
     shift *= -1
@@ -9,21 +9,21 @@ elif direction == 'l':
 else:
     print("error - enter 'l' or 'r' for 'left/right'")
     
-arr1 = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 encoding = []
 
-for i in range(shift, len(arr1)):
-    encoding.append(arr1[i])
+for i in range(shift, len(alphabet)):
+    encoding.append(alphabet[i])
 
 for j in range(shift):
-    encoding.append(arr1[j])
+    encoding.append(alphabet[j])
     
 message = message.lower()
 message = list(message)
 
 for i in range(len(message)):
     for j in range(26):
-        if message[i] == arr1[j]:
+        if message[i] == alphabet[j]:
             message[i] = message[i].replace(message[i], encoding[j])
             break
 
