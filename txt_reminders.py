@@ -5,7 +5,6 @@ import time
 import xml.etree.ElementTree as ET
 import urllib.request
 
-
 def get_current_time():
     full_time = str(datetime.now().time())
     full_time = full_time.split('.')
@@ -28,8 +27,9 @@ def remind_at_time(sender, receiver):
 
 def remind_bus_time(sender, receiver):
     while True:
+        check_bus_time_home(sender, receiver)
         try:
-            url = ('http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=chapel-hill&r=CM&s=camerobe_e')
+            url = keys.url
             decoded_route = urllib.request.urlopen(url).read().decode('utf-8')
         except:
             print('error')
@@ -48,14 +48,41 @@ def remind_bus_time(sender, receiver):
             for directions in p.findall('direction'):
                 for predictions in directions.findall('prediction'):
                     time_left = predictions.attrib['minutes']
-                    information = time_left + " minutes until CM arrives to home."
-                    print(time_left)
-                    if time_left <= '40':
+                    information = time_left + " minutes until CM arrives to " + keys.a_location + "."
+                    print("h" + time_left)
+                    if time_left <= '10':
                         message = twilioCli.messages.create(body=information, from_=sender, to=receiver)
                         break
         
         time.sleep(120)
                     
+def check_bus_time_home(sender, receiver):
+    try:
+        url = keys.url_home
+        decoded_route = urllib.request.urlopen(url).read().decode('utf-8')
+    except:
+        print('error')
+        
+    bus = 'bus.xml'
+    file = open(bus,'w')
+    
+    file.write(decoded_route)
+    
+    file.close()
+    
+    tree = ET.parse(bus)
+    root = tree.getroot()
+    
+    for p in root.findall('predictions'):
+        for directions in p.findall('direction'):
+            for predictions in directions.findall('prediction'):
+                time_left = predictions.attrib['minutes']
+                information = time_left + " minutes until CM arrives to SITTERSON."
+                print('S' + time_left)
+                if time_left <= '15':
+                    message = twilioCli.messages.create(body=information, from_=sender, to=receiver)
+                    return 0
+    
 accountSID = keys.accountSID
 authToken = keys.authToken
 
@@ -65,4 +92,3 @@ myTwilioNumber = keys.myTwilioNumber
 myNumber = keys.myNumber
 
 remind_bus_time(myTwilioNumber, myNumber)
-print('done')
